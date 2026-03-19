@@ -1,8 +1,11 @@
 """Generate values for all types of covers."""
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -66,11 +69,10 @@ class AdaptiveGeneralCover(ABC):
 
         if solpos[frame].empty:
             return None, None
-        else:
-            return (
-                solpos[frame].index[0].to_pydatetime(),
-                solpos[frame].index[-1].to_pydatetime(),
-            )
+        return (
+            solpos[frame].index[0].to_pydatetime(),
+            solpos[frame].index[-1].to_pydatetime(),
+        )
 
     @property
     def _get_azimuth_edges(self) -> tuple[int, int]:
@@ -229,7 +231,7 @@ class NormalCoverState:
 
 
 @dataclass
-class ClimateCoverData:
+class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
     """Fetch additional data."""
 
     hass: HomeAssistant
@@ -399,33 +401,49 @@ class ClimateCoverState(NormalCoverState):
         return self.normal_without_presence()
 
     def normal_with_presence(self) -> int:
-        """Determine state for horizontal and vertical covers with occupants."""
+        """Determine state for horizontal and vertical covers with occupants.
+
+        FIX (Winter + présence) :
+        Dans le code original, le check Winter était IMBRIQUÉ dans le bloc
+        `if not is_summer and (lux or irradiance or not is_sunny)`.
+        Par temps ensoleillé (lux élevé, is_sunny=True), cette condition
+        entière était False → le mode Winter n'était jamais déclenché et
+        le volet restait en position Basic au lieu de s'ouvrir à 100%.
+
+        Correction : le check Winter est évalué EN PREMIER, indépendamment
+        du filtre lux/irradiance/météo. En hiver avec soleil présent, c'est
+        précisément le moment où l'on veut capter un maximum de chaleur.
+        """
 
         is_summer = self.climate_data.is_summer
 
-        # Check if it's not summer and either lux, irradiance or sunny weather is present
+        # ── FIX : Winter check prioritaire, avant tout filtre lux/météo ──────
+        # Quand présence=True, T° < seuil bas ET soleil dans le champ → 100%
+        # Peu importe que le ciel soit dégagé (is_sunny=True, lux élevé) :
+        # en hiver avec soleil, on ouvre toujours à 100% pour capter la chaleur.
+        if not is_summer and self.climate_data.is_winter and self.cover.valid:
+            self.cover.logger.debug(
+                "n_w_p(): Winter and sun is in front of window = use 100"
+            )
+            return 100
+
+        # ── Filtre lux / irradiance / météo (temps nuageux ou faible luminosité)
+        # Si pas d'ensoleillement direct détecté → position par défaut
         if not is_summer and (
             self.climate_data.lux
             or self.climate_data.irradiance
             or not self.climate_data.is_sunny
         ):
-            # If it's winter and the cover is valid, return 100
-            if self.climate_data.is_winter and self.cover.valid:
-                self.cover.logger.debug(
-                    "n_w_p(): Winter and sun is in front of window = use 100"
-                )
-                return 100
-            # Otherwise, return the default cover state
             self.cover.logger.debug(
                 "n_w_p(): it's not summer and sunny weather is not present = use default"
             )
             return self.cover.default
 
-        # If it's summer and there's a transparent blind, return 0
+        # ── Été avec volet transparent → fermeture complète ──────────────────
         if is_summer and self.climate_data.transparent_blind:
             return 0
 
-        # If none of the above conditions are met, get the state from the parent class
+        # ── Aucune condition clima déclenchée → position Basic calculée ───────
         self.cover.logger.debug("n_w_p(): None of the climate conditions are met")
         return super().get_state()
 
@@ -453,7 +471,12 @@ class ClimateCoverState(NormalCoverState):
 
     def tilt_without_presence(self, degrees: int) -> int:
         """Determine state for tilted blinds without occupants."""
-        beta = np.rad2deg(self.cover.beta)
+        # cast : tilt_without_presence n'est appelé que depuis tilt_state(),
+        # lui-même dispatché uniquement quand blind_type == "cover_tilt".
+        # self.cover est donc toujours une instance de AdaptiveTiltCover,
+        # qui possède la propriété `beta`. Le cast informe le linter.
+        tilt_cover = cast(AdaptiveTiltCover, self.cover)
+        beta = np.rad2deg(tilt_cover.beta)
         if self.cover.valid:
             if self.climate_data.is_summer:
                 # block out all light in summer
