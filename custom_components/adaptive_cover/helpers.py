@@ -1,55 +1,45 @@
 """Helper functions."""
 
+from __future__ import annotations
+
 import datetime as dt
 
-import pandas as pd
 from dateutil import parser
 from homeassistant.core import HomeAssistant, split_entity_id
 
 
-def get_safe_state(hass: HomeAssistant, entity_id: str):
-    """Get a safe state value if not available."""
+def get_safe_state(hass: HomeAssistant, entity_id: str) -> str | None:
+    """Return entity state, or None if unknown/unavailable."""
     state = hass.states.get(entity_id)
-    if not state or state.state in ["unknown", "unavailable"]:
+    if not state or state.state in ("unknown", "unavailable"):
         return None
     return state.state
 
 
-def get_domain(entity: str):
-    """Get domain of entity."""
+def get_domain(entity: str) -> str | None:
+    """Return the domain part of an entity_id."""
     if entity is not None:
+        # CLEAN: _ remplace object_id (W0612 — jamais utilisée)
         domain, _ = split_entity_id(entity)
         return domain
+    return None
 
 
-def get_timedelta_str(string: str):
-    """Convert string to timedelta."""
-    if string is not None:
-        return pd.to_timedelta(string)
-
-
-def get_datetime_from_str(string: str):
-    """Convert datetime string to datetime."""
+def get_datetime_from_str(string: str) -> dt.datetime | None:
+    """Convert a datetime string to a naive datetime object."""
     if string is not None:
         return parser.parse(string, ignoretz=True)
+    return None
 
 
-def get_last_updated(entity_id: str, hass: HomeAssistant):
-    """Get last updated attribute from entity."""
+def get_last_updated(entity_id: str, hass: HomeAssistant) -> dt.datetime | None:
+    """Return last_updated timestamp of an entity, or None."""
     if entity_id is not None:
-        if hass.states.get(entity_id):
-            return hass.states.get(entity_id).last_updated
+        state = hass.states.get(entity_id)
+        if state:
+            return state.last_updated
+    return None
 
 
-def check_time_passed(time: dt.datetime):
-    """Check if time is passed for datetime.time()."""
-    now = dt.datetime.now().time()
-    return now >= time.time()
-
-
-def dt_check_time_passed(time: dt.datetime):
-    """Check if time is passed today for UTC datetime."""
-    now = dt.datetime.now(dt.UTC)
-    if now.date() == time.date():
-        return now.time() > time.time()
-    return True
+# CLEAN: get_timedelta_str, check_time_passed, dt_check_time_passed supprimées
+# Aucune utilisation dans le projet (dead code confirmé par analyse statique)
