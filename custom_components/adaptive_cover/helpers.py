@@ -18,7 +18,7 @@ def get_safe_state(hass: HomeAssistant, entity_id: str):
 def get_domain(entity: str):
     """Get domain of entity."""
     if entity is not None:
-        domain, object_id = split_entity_id(entity)
+        domain, _ = split_entity_id(entity)
         return domain
 
 
