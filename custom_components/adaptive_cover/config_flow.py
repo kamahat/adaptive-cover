@@ -901,7 +901,8 @@ class OptionsFlowHandler(OptionsFlow):
         """Update config entry options."""
         return self.async_create_entry(title="", data=self.options)
 
-    def optional_entities(self, keys: list, user_input: dict[str, Any] | None = None):
+    @staticmethod
+    def optional_entities(keys: list, user_input: dict[str, Any] | None = None):
         """Set value to None if key does not exist."""
         for key in keys:
             if key not in user_input:
