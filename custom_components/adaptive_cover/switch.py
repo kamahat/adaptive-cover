@@ -1,9 +1,9 @@
 """Switch platform for the Adaptive Cover integration."""
- 
+
 from __future__ import annotations
- 
+
 from typing import Any
- 
+
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import STATE_ON
@@ -12,7 +12,7 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
- 
+
 from .const import (
     CONF_CLIMATE_MODE,
     CONF_ENTITIES,
@@ -24,8 +24,8 @@ from .const import (
     DOMAIN,
 )
 from .coordinator import AdaptiveDataUpdateCoordinator
- 
- 
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
@@ -35,7 +35,7 @@ async def async_setup_entry(
     coordinator: AdaptiveDataUpdateCoordinator = hass.data[DOMAIN][
         config_entry.entry_id
     ]
- 
+
     manual_switch = AdaptiveCoverSwitch(
         config_entry,
         config_entry.entry_id,
@@ -84,17 +84,17 @@ async def async_setup_entry(
         "irradiance_toggle",
         coordinator,
     )
- 
+
     climate_mode = config_entry.options.get(CONF_CLIMATE_MODE)
     weather_entity = config_entry.options.get(CONF_WEATHER_ENTITY)
     sensor_entity = config_entry.options.get(CONF_OUTSIDETEMP_ENTITY)
     lux_entity = config_entry.options.get(CONF_LUX_ENTITY)
     irradiance_entity = config_entry.options.get(CONF_IRRADIANCE_ENTITY)
     switches = []
- 
+
     if len(config_entry.options.get(CONF_ENTITIES)) >= 1:
         switches = [control_switch, manual_switch]
- 
+
     if climate_mode:
         switches.append(climate_switch)
         if weather_entity or sensor_entity:
@@ -103,18 +103,18 @@ async def async_setup_entry(
             switches.append(lux_switch)
         if irradiance_entity:
             switches.append(irradiance_switch)
- 
+
     async_add_entities(switches)
- 
- 
+
+
 class AdaptiveCoverSwitch(
     CoordinatorEntity[AdaptiveDataUpdateCoordinator], SwitchEntity, RestoreEntity
 ):
     """Representation of a adaptive cover switch."""
- 
+
     _attr_has_entity_name = True
     _attr_should_poll = False
- 
+
     def __init__(
         self,
         config_entry,
@@ -146,14 +146,14 @@ class AdaptiveCoverSwitch(
             identifiers={(DOMAIN, self._device_id)},
             name=self._device_name,
         )
- 
+
         self.coordinator.logger.debug("Setup switch")
- 
+
     @property
     def name(self):
         """Name of the entity."""
         return f"{self._switch_name} {self._name}"
- 
+
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the switch on."""
         self.coordinator.logger.debug("Turning on")
@@ -170,7 +170,7 @@ class AdaptiveCoverSwitch(
                     )
         await self.coordinator.async_refresh()
         self.schedule_update_ha_state()
- 
+
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the device off."""
         self.coordinator.logger.debug("Turning off")
@@ -181,7 +181,7 @@ class AdaptiveCoverSwitch(
                 self.coordinator.manager.reset(entity)
         await self.coordinator.async_refresh()
         self.schedule_update_ha_state()
- 
+
     async def async_added_to_hass(self) -> None:
         """Call when entity about to be added to hass."""
         # FIX (Bug switches OFF après redémarrage) :
@@ -194,7 +194,7 @@ class AdaptiveCoverSwitch(
         # L'appel à super() enregistre le listener ET appelle _handle_coordinator_update()
         # immédiatement, garantissant la synchronisation initiale de l'état.
         await super().async_added_to_hass()
- 
+
         last_state = await self.async_get_last_state()
         self.coordinator.logger.debug("%s: last state is %s", self._name, last_state)
         if (last_state is None and self._initial_state) or (
