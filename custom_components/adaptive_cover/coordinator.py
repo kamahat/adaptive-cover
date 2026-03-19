@@ -714,21 +714,24 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
             "Climate mode control method was set to %s", self.control_method
         )
 
-    def vertical_data(self, options):
+    @staticmethod
+    def vertical_data(options):
         """Update data for vertical blinds."""
         return [
             options.get(CONF_DISTANCE),
             options.get(CONF_HEIGHT_WIN),
         ]
 
-    def horizontal_data(self, options):
+    @staticmethod
+    def horizontal_data(options):
         """Update data for horizontal blinds."""
         return [
             options.get(CONF_LENGTH_AWNING),
             options.get(CONF_AWNING_ANGLE),
         ]
 
-    def tilt_data(self, options):
+    @staticmethod
+    def tilt_data(options):
         """Update data for tilted blinds."""
         return [
             options.get(CONF_TILT_DISTANCE),
@@ -756,7 +759,8 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
         if self._inverse_state and self._use_interpolation:
             self.logger.info(
-                "Inverse state is not supported with interpolation, you can inverse the state by arranging the list from high to low"
+                "Inverse state is not supported with interpolation, "
+                "you can inverse the state by arranging the list from high to low"
             )
 
         if self._inverse_state and not self._use_interpolation:
