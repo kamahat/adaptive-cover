@@ -794,6 +794,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @switch_mode.setter
     def switch_mode(self, value):
+        """Set climate switch mode."""
         self._switch_mode = value
 
     @property
@@ -803,6 +804,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @temp_toggle.setter
     def temp_toggle(self, value):
+        """Set outside temperature toggle."""
         self._temp_toggle = value
 
     @property
@@ -812,6 +814,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @control_toggle.setter
     def control_toggle(self, value):
+        """Set automation control toggle."""
         self._control_toggle = value
 
     @property
@@ -821,6 +824,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @manual_toggle.setter
     def manual_toggle(self, value):
+        """Set manual override toggle."""
         self._manual_toggle = value
 
     @property
@@ -830,6 +834,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @lux_toggle.setter
     def lux_toggle(self, value):
+        """Set lux sensor toggle."""
         self._lux_toggle = value
 
     @property
@@ -839,6 +844,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     @irradiance_toggle.setter
     def irradiance_toggle(self, value):
+        """Set irradiance sensor toggle."""
         self._irradiance_toggle = value
 
 
