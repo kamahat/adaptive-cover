@@ -189,10 +189,9 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     async def async_timed_refresh(self, event) -> None:
         """Control state at end time."""
-
         now = dt.datetime.now()
-        if self.end_time is not None:
-            time = self.end_time
+        # Initialiser time pour éviter UnboundLocalError si aucune condition n'est vraie
+        time = self.end_time
         if self.end_time_entity is not None:
             time = get_safe_state(self.hass, self.end_time_entity)
 
@@ -691,7 +690,30 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     def climate_mode_data(self, options, cover_data):
         """Update climate mode data and control method."""
-        climate = ClimateCoverData(*self.get_climate_data(options))
+        # Passage des arguments nommément pour éviter le warning pylint
+        # "Too many positional arguments" lié à l'expansion *splat sur un @dataclass.
+        climate_args = self.get_climate_data(options)
+        climate = ClimateCoverData(
+            hass=climate_args[0],
+            logger=climate_args[1],
+            temp_entity=climate_args[2],
+            temp_low=climate_args[3],
+            temp_high=climate_args[4],
+            presence_entity=climate_args[5],
+            weather_entity=climate_args[6],
+            weather_condition=climate_args[7],
+            outside_entity=climate_args[8],
+            temp_switch=climate_args[9],
+            blind_type=climate_args[10],
+            transparent_blind=climate_args[11],
+            lux_entity=climate_args[12],
+            irradiance_entity=climate_args[13],
+            lux_threshold=climate_args[14],
+            irradiance_threshold=climate_args[15],
+            temp_summer_outside=climate_args[16],
+            _use_lux=climate_args[17],
+            _use_irradiance=climate_args[18],
+        )
 
         # FIX (Bug double instanciation) : ClimateCoverState était instancié 2 fois,
         # effectuant tous les calculs en double à chaque refresh.
