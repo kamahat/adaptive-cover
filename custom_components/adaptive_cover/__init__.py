@@ -12,11 +12,14 @@ from homeassistant.helpers.event import (
 from .const import (
     CONF_END_ENTITY,
     CONF_ENTITIES,
+    CONF_IRRADIANCE_ENTITY,
+    CONF_LUX_ENTITY,
+    CONF_OUTSIDETEMP_ENTITY,
     CONF_PRESENCE_ENTITY,
+    CONF_START_ENTITY,
     CONF_TEMP_ENTITY,
     CONF_WEATHER_ENTITY,
     DOMAIN,
-    _LOGGER,
 )
 from .coordinator import AdaptiveDataUpdateCoordinator
 
@@ -44,12 +47,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _weather_entity = entry.options.get(CONF_WEATHER_ENTITY)
     _cover_entities = entry.options.get(CONF_ENTITIES, [])
     _end_time_entity = entry.options.get(CONF_END_ENTITY)
+    _lux_entity = entry.options.get(CONF_LUX_ENTITY)
+    _irradiance_entity = entry.options.get(CONF_IRRADIANCE_ENTITY)
+    _outside_temp_entity = entry.options.get(CONF_OUTSIDETEMP_ENTITY)
+    _start_time_entity = entry.options.get(CONF_START_ENTITY)
     _entities = ["sun.sun"]
-    for entity in [_temp_entity, _presence_entity, _weather_entity, _end_time_entity]:
+    for entity in [
+        _temp_entity,
+        _presence_entity,
+        _weather_entity,
+        _end_time_entity,
+        _lux_entity,
+        _irradiance_entity,
+        _outside_temp_entity,
+        _start_time_entity,
+    ]:
         if entity is not None:
             _entities.append(entity)
-
-    _LOGGER.debug("Setting up entry %s", entry.data.get("name"))
 
     entry.async_on_unload(
         async_track_state_change_event(
