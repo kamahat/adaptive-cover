@@ -280,13 +280,20 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
             return temp
 
     @property
-    def get_current_temperature(self) -> float:
-        """Get temperature."""
+    def get_current_temperature(self) -> float | None:
+        """Return current temperature as float, or None if unavailable.
+
+        Uses `is not None` rather than a truthy check to correctly handle
+        a temperature of 0.0°C (which is falsy but perfectly valid).
+        """
         if self.temp_switch:
-            if self.outside_temperature:
-                return float(self.outside_temperature)
-        if self.inside_temperature:
-            return float(self.inside_temperature)
+            outside = self.outside_temperature
+            if outside is not None:
+                return float(outside)
+        inside = self.inside_temperature
+        if inside is not None:
+            return float(inside)
+        return None
 
     @property
     def is_presence(self):
@@ -369,6 +376,8 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
             return False
         if self.lux_entity is not None and self.lux_threshold is not None:
             value = get_safe_state(self.hass, self.lux_entity)
+            if value is None:
+                return False
             return float(value) <= self.lux_threshold
         return False
 
@@ -379,6 +388,8 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
             return False
         if self.irradiance_entity is not None and self.irradiance_threshold is not None:
             value = get_safe_state(self.hass, self.irradiance_entity)
+            if value is None:
+                return False
             return float(value) <= self.irradiance_threshold
         return False
 
