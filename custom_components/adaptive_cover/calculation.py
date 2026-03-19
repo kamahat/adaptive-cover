@@ -171,7 +171,7 @@ class AdaptiveGeneralCover(ABC):
     @property
     def apply_min_position(self) -> bool:
         """Check if min position is applied."""
-        if self.min_pos is not None and self.min_pos != 0:
+        if self.min_pos is not None and self.min_pos != 0:  # noqa: C0121 — int comparison, not None/True/False
             if self.min_pos_bool:
                 return self.direct_sun_valid
             return True
