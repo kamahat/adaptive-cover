@@ -5,7 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -471,12 +470,12 @@ class ClimateCoverState(NormalCoverState):
 
     def tilt_without_presence(self, degrees: int) -> int:
         """Determine state for tilted blinds without occupants."""
-        # cast : tilt_without_presence n'est appelé que depuis tilt_state(),
-        # lui-même dispatché uniquement quand blind_type == "cover_tilt".
-        # self.cover est donc toujours une instance de AdaptiveTiltCover,
-        # qui possède la propriété `beta`. Le cast informe le linter.
-        tilt_cover = cast(AdaptiveTiltCover, self.cover)
-        beta = np.rad2deg(tilt_cover.beta)
+        # assert isinstance : tilt_without_presence est appelé uniquement
+        # quand blind_type == "cover_tilt" → self.cover est toujours
+        # AdaptiveTiltCover (possède beta et mode). L'assert permet au linter
+        # (pylint/mypy) de réduire le type sans recourir à cast().
+        assert isinstance(self.cover, AdaptiveTiltCover)
+        beta = np.rad2deg(self.cover.beta)
         if self.cover.valid:
             if self.climate_data.is_summer:
                 # block out all light in summer
@@ -489,6 +488,9 @@ class ClimateCoverState(NormalCoverState):
 
     def tilt_state(self):
         """Add tilt specific controls."""
+        assert isinstance(self.cover, AdaptiveTiltCover), (
+            "tilt_state requires AdaptiveTiltCover"
+        )
         degrees = 90
         if self.cover.mode == "mode2":
             degrees = 180
