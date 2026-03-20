@@ -427,18 +427,18 @@ class ClimateCoverState(NormalCoverState):
 
         is_summer = self.climate_data.is_summer
 
-        # ── FIX : Winter check prioritaire, avant tout filtre lux/météo ──────
-        # Quand présence=True, T° < seuil bas ET soleil dans le champ → 100%
-        # Peu importe que le ciel soit dégagé (is_sunny=True, lux élevé) :
-        # en hiver avec soleil, on ouvre toujours à 100% pour capter la chaleur.
+        # ── FIX: Winter check takes priority over lux/weather filter ──────────
+        # When presence=True, T° < low threshold AND sun in window → 100%
+        # Regardless of clear sky (is_sunny=True, high lux):
+        # in winter with sun present, always open fully to capture solar heat.
         if not is_summer and self.climate_data.is_winter and self.cover.valid:
             self.cover.logger.debug(
                 "n_w_p(): Winter and sun is in front of window = use 100"
             )
             return 100
 
-        # ── Filtre lux / irradiance / météo (temps nuageux ou faible luminosité)
-        # Si pas d'ensoleillement direct détecté → position par défaut
+        # ── Lux / irradiance / weather filter (overcast or low light)
+        # No direct sunlight detected → use default position
         if not is_summer and (
             self.climate_data.lux
             or self.climate_data.irradiance
@@ -449,11 +449,11 @@ class ClimateCoverState(NormalCoverState):
             )
             return self.cover.default
 
-        # ── Été avec volet transparent → fermeture complète ──────────────────
+        # ── Summer with transparent blind → fully closed ──────────────────────
         if is_summer and self.climate_data.transparent_blind:
             return 0
 
-        # ── Aucune condition clima déclenchée → position Basic calculée ───────
+        # ── No climate condition triggered → fall back to basic calculated position
         self.cover.logger.debug("n_w_p(): None of the climate conditions are met")
         return super().get_state()
 
@@ -481,10 +481,10 @@ class ClimateCoverState(NormalCoverState):
 
     def tilt_without_presence(self, degrees: int) -> int:
         """Determine state for tilted blinds without occupants."""
-        # assert isinstance : tilt_without_presence est appelé uniquement
-        # quand blind_type == "cover_tilt" → self.cover est toujours
-        # AdaptiveTiltCover (possède beta et mode). L'assert permet au linter
-        # (pylint/mypy) de réduire le type sans recourir à cast().
+        # assert isinstance: tilt_without_presence is only called
+        # when blind_type == "cover_tilt", so self.cover is always
+        # AdaptiveTiltCover (has beta and mode). The assert lets the linter
+        # (pylint/mypy) narrow the type without using cast().
         assert isinstance(self.cover, AdaptiveTiltCover)
         beta = np.rad2deg(self.cover.beta)
         if self.cover.valid:
