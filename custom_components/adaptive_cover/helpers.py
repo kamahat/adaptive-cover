@@ -19,7 +19,7 @@ def get_safe_state(hass: HomeAssistant, entity_id: str) -> str | None:
 def get_domain(entity: str) -> str | None:
     """Return the domain part of an entity_id."""
     if entity is not None:
-        # CLEAN: _ remplace object_id (W0612 — jamais utilisée)
+        # CLEAN: _ replaces object_id (W0612 — never used)
         domain, _ = split_entity_id(entity)
         return domain
     return None
@@ -41,5 +41,5 @@ def get_last_updated(entity_id: str, hass: HomeAssistant) -> dt.datetime | None:
     return None
 
 
-# CLEAN: get_timedelta_str, check_time_passed, dt_check_time_passed supprimées
-# Aucune utilisation dans le projet (dead code confirmé par analyse statique)
+# CLEAN: get_timedelta_str, check_time_passed, dt_check_time_passed removed
+# No usages found in the project (dead code confirmed by static analysis)
