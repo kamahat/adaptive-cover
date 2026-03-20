@@ -17,7 +17,6 @@ from .helpers import get_domain, get_safe_state
 from .sun import SunData
 from .config_context_adapter import ConfigContextAdapter
 
-
 @dataclass
 class AdaptiveGeneralCover(ABC):
     """Collect common data."""
