@@ -184,15 +184,15 @@ class AdaptiveCoverSwitch(
 
     async def async_added_to_hass(self) -> None:
         """Call when entity about to be added to hass."""
-        # FIX (Bug switches OFF après redémarrage) :
-        # super().async_added_to_hass() n'était pas appelé, ce qui empêchait
-        # CoordinatorEntity d'enregistrer son listener de mise à jour.
-        # Sans ce listener :
-        #   1. _handle_coordinator_update() n'était jamais appelé depuis le coordinator
-        #   2. Le switch ne se synchronisait pas avec l'état HA après les refreshes
-        #   3. Les switches lux/irradiance/climate pouvaient apparaître OFF au redémarrage
-        # L'appel à super() enregistre le listener ET appelle _handle_coordinator_update()
-        # immédiatement, garantissant la synchronisation initiale de l'état.
+        # FIX (switches OFF after restart bug):
+        # super().async_added_to_hass() was not called, which prevented
+        # CoordinatorEntity from registering its update listener.
+        # Without this listener:
+        #   1. _handle_coordinator_update() was never called from the coordinator
+        #   2. The switch did not synchronise with the HA state after refreshes
+        #   3. lux/irradiance/climate switches could appear OFF after restart
+        # Calling super() registers the listener AND calls _handle_coordinator_update()
+        # immediately, ensuring the initial state is synchronised.
         await super().async_added_to_hass()
 
         last_state = await self.async_get_last_state()
