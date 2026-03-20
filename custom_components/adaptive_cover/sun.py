@@ -33,7 +33,7 @@ class SunData:
     @property
     def solar_azimuth(self) -> list[float]:
         """Return solar azimuth for each 5-minute slot today."""
-        # OPTIM: list comprehension — élimine la boucle for avec index manuel
+        # OPTIM: list comprehension — eliminates manual index for-loop
         return [
             self.location.solar_azimuth(t, self.elevation)
             for t in self.times
@@ -42,7 +42,7 @@ class SunData:
     @property
     def solar_elevation(self) -> list[float]:
         """Return solar elevation for each 5-minute slot today."""
-        # OPTIM: list comprehension — élimine la boucle for avec index manuel
+        # OPTIM: list comprehension — eliminates manual index for-loop
         return [
             self.location.solar_elevation(t, self.elevation)
             for t in self.times
