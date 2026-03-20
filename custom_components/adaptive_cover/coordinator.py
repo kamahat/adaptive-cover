@@ -140,12 +140,12 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
         self._control_toggle = None
         self._manual_toggle = None
 
-        # FIX (Bug lux/irradiance au démarrage) :
-        # Initialisé à True si l'entité est configurée, plutôt qu'à None.
-        # Avec None, `not self._use_lux` est True → lux() retourne False →
-        # le mode Winter n'est jamais déclenché lors du premier refresh,
-        # avant que les switches aient restauré leur état.
-        # True correspond à l'initial_state=True du switch dans switch.py.
+        # FIX (lux/irradiance startup bug):
+        # Initialised to True when the entity is configured, rather than None.
+        # With None, `not self._use_lux` is True → lux() returns False →
+        # the Winter mode is never triggered on the first refresh,
+        # before the switches have restored their state.
+        # True matches the initial_state=True of the switch in switch.py.
         self._lux_toggle = (
             True if self.config_entry.options.get(CONF_LUX_ENTITY) else None
         )
@@ -190,7 +190,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
     async def async_timed_refresh(self, event) -> None:
         """Control state at end time."""
         now = dt.datetime.now()
-        # Initialiser time pour éviter UnboundLocalError si aucune condition n'est vraie
+        # Initialise time to avoid UnboundLocalError if neither condition is true
         time = self.end_time
         if self.end_time_entity is not None:
             time = get_safe_state(self.hass, self.end_time_entity)
@@ -544,9 +544,9 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
             self.logger.debug(
                 "Start time: %s, now: %s, now >= time: %s", time, now, now >= time
             )
-            # FIX (Bug typo) : self._start_time n'était pas assigné (lecture seule).
-            # Sans cette assignation, _start_time restait None et la vérification
-            # "start_time > end_time" dans check_adaptive_time ne fonctionnait jamais.
+            # FIX (typo bug): self._start_time was not assigned (read-only access).
+            # Without this assignment, _start_time stayed None and the check
+            # "start_time > end_time" in check_adaptive_time never worked.
             self._start_time = time
             return now >= time
         return True
@@ -690,8 +690,8 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
 
     def climate_mode_data(self, options, cover_data):
         """Update climate mode data and control method."""
-        # Passage des arguments nommément pour éviter le warning pylint
-        # "Too many positional arguments" lié à l'expansion *splat sur un @dataclass.
+        # Pass arguments by name to avoid the pylint warning
+        # "Too many positional arguments" caused by *splat expansion on a @dataclass.
         climate_args = self.get_climate_data(options)
         climate = ClimateCoverData(
             hass=climate_args[0],
@@ -715,16 +715,16 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
             _use_irradiance=climate_args[18],
         )
 
-        # FIX (Bug double instanciation) : ClimateCoverState était instancié 2 fois,
-        # effectuant tous les calculs en double à chaque refresh.
+        # FIX (double instantiation bug): ClimateCoverState was instantiated twice,
+        # performing all calculations twice on every refresh.
         climate_state_obj = ClimateCoverState(cover_data, climate)
         self.climate_state = round(climate_state_obj.get_state())
         climate_data = climate_state_obj.climate_data
 
-        # FIX (Bug control_method bloqué) : les deux `if` indépendants ne
-        # permettaient jamais de revenir à "intermediate". Si la T° passait
-        # de summer à intermédiaire, control_method restait "summer" indéfiniment.
-        # Correction : if/elif/else pour couvrir les 3 cas mutuellement exclusifs.
+        # FIX (stuck control_method bug): two independent `if` statements
+        # never allowed returning to "intermediate". If the temperature moved
+        # from summer to intermediate, control_method stayed "summer" forever.
+        # Fix: if/elif/else to cover all three mutually exclusive cases.
         if climate_data.is_summer and self.switch_mode:
             self.control_method = "summer"
         elif climate_data.is_winter and self.switch_mode:
