@@ -382,8 +382,8 @@ class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
         """Get the options flow for this handler."""
-        # FIX HA 2025.12 (PR #439): OptionsFlowHandler() sans argument.
-        # HA injecte désormais config_entry automatiquement via la property héritée.
+        # FIX HA 2025.12 (PR #439): OptionsFlowHandler() with no argument.
+        # HA now injects config_entry automatically via the inherited property.
         return OptionsFlowHandler()
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
@@ -637,21 +637,21 @@ class OptionsFlowHandler(OptionsFlow):
     """Options to adjust parameters."""
 
     # FIX HA 2025.12 (PR #439):
-    # Suppression du __init__(self, config_entry) qui tentait d'assigner
-    # self.config_entry = config_entry sur une property read-only depuis HA 2025.12.
+    # Removed __init__(self, config_entry) which attempted to assign
+    # self.config_entry = config_entry on a read-only property since HA 2025.12.
     #
-    # Depuis HA 2025.12, la classe de base OptionsFlow expose config_entry
-    # en tant que property read-only injectée automatiquement par HA.
-    # Il ne faut plus ni passer config_entry en argument, ni l'assigner dans __init__.
+    # Since HA 2025.12, the OptionsFlow base class exposes config_entry
+    # as a read-only property injected automatically by HA.
+    # config_entry must no longer be passed as an argument or assigned in __init__.
     #
-    # Solution : on déplace l'initialisation dans async_step_init() où
-    # self.config_entry est déjà disponible via la property héritée.
+    # Solution: move initialisation into async_step_init() where
+    # self.config_entry is already available via the inherited property.
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options — initialise les attributs dépendants de config_entry ici."""
-        # Initialisation déplacée depuis __init__ (fix HA 2025.12)
+        # Initialisation moved from __init__ (fix HA 2025.12)
         if not hasattr(self, "_options_initialized"):
             self.current_config: dict = dict(self.config_entry.data)
             self.options: dict = dict(self.config_entry.options)
