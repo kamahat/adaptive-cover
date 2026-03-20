@@ -413,48 +413,70 @@ class ClimateCoverState(NormalCoverState):
     def normal_with_presence(self) -> int:
         """Determine state for horizontal and vertical covers with occupants.
 
-        FIX (Winter + présence) :
-        Dans le code original, le check Winter était IMBRIQUÉ dans le bloc
-        `if not is_summer and (lux or irradiance or not is_sunny)`.
-        Par temps ensoleillé (lux élevé, is_sunny=True), cette condition
-        entière était False → le mode Winter n'était jamais déclenché et
-        le volet restait en position Basic au lieu de s'ouvrir à 100%.
+        Priority tree (presence=True):
 
-        Correction : le check Winter est évalué EN PREMIER, indépendamment
-        du filtre lux/irradiance/météo. En hiver avec soleil présent, c'est
-        précisément le moment où l'on veut capter un maximum de chaleur.
+        1. Sun NOT in window (cover.valid=False)
+               → default position  (no action needed)
+
+        2. Sun in window (cover.valid=True)
+           a. WINTER  (T° < low threshold)
+                  → 100% open  (capture solar heat regardless of lux/weather)
+           b. SUMMER  (T° > high threshold)
+                  transparent_blind=True  → basic calculated  (sheer: shade only)
+                  transparent_blind=False → 0% closed         (opaque: preserve cool)
+           c. INTERMEDIATE
+                  overcast / low lux / low irradiance → default position
+                  sunny                               → basic calculated (shade only)
         """
 
         is_summer = self.climate_data.is_summer
 
-        # ── FIX: Winter check takes priority over lux/weather filter ──────────
-        # When presence=True, T° < low threshold AND sun in window → 100%
-        # Regardless of clear sky (is_sunny=True, high lux):
-        # in winter with sun present, always open fully to capture solar heat.
-        if not is_summer and self.climate_data.is_winter and self.cover.valid:
+        # ── Step 1: sun not in window → default regardless of season ──────────
+        if not self.cover.valid:
+            self.cover.logger.debug(
+                "n_w_p(): sun not in window → default"
+            )
+            return self.cover.default
+
+        # ── Step 2a: WINTER + sun in window → open fully ──────────────────────
+        # Winter check precedes lux/weather filter: even on a clear sunny day
+        # in winter, the goal is to capture as much solar heat as possible.
+        if not is_summer and self.climate_data.is_winter:
             self.cover.logger.debug(
                 "n_w_p(): Winter and sun is in front of window = use 100"
             )
             return 100
 
-        # ── Lux / irradiance / weather filter (overcast or low light)
-        # No direct sunlight detected → use default position
-        if not is_summer and (
+        # ── Step 2b: SUMMER + sun in window ───────────────────────────────────
+        if is_summer:
+            if self.climate_data.transparent_blind:
+                # Sheer / voile curtain: cannot fully block anyway → shade only
+                self.cover.logger.debug(
+                    "n_w_p(): Summer + transparent blind → basic (shade only)"
+                )
+                return super().get_state()
+            # Opaque blind: close fully to preserve indoor cool
+            self.cover.logger.debug(
+                "n_w_p(): Summer + opaque blind → 0% (fully closed)"
+            )
+            return 0
+
+        # ── Step 2c: INTERMEDIATE + sun in window ─────────────────────────────
+        # Overcast / low lux / low irradiance → no direct sun → default position
+        if (
             self.climate_data.lux
             or self.climate_data.irradiance
             or not self.climate_data.is_sunny
         ):
             self.cover.logger.debug(
-                "n_w_p(): it's not summer and sunny weather is not present = use default"
+                "n_w_p(): Intermediate + no direct sun → default"
             )
             return self.cover.default
 
-        # ── Summer with transparent blind → fully closed ──────────────────────
-        if is_summer and self.climate_data.transparent_blind:
-            return 0
-
-        # ── No climate condition triggered → fall back to basic calculated position
-        self.cover.logger.debug("n_w_p(): None of the climate conditions are met")
+        # Sunny intermediate: calculate shade position to reduce glare
+        self.cover.logger.debug(
+            "n_w_p(): Intermediate + sunny → basic calculated (shade only)"
+        )
         return super().get_state()
 
     def normal_without_presence(self) -> int:
