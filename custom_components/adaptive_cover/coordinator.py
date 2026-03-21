@@ -118,6 +118,7 @@ class AdaptiveCoverData:
     climate_mode_toggle: bool
     states: dict
     attributes: dict
+    climate_debug: dict | None = None  # populated only when climate_mode is active
 
 
 class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
@@ -173,6 +174,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
         self.manager = AdaptiveCoverManager(self.manual_duration, self.logger)
         self.wait_for_target = {}
         self.target_call = {}
+        self._climate_debug: dict | None = None
         self.ignore_intermediate_states = self.config_entry.options.get(
             CONF_MANUAL_IGNORE_INTERMEDIATE, False
         )
@@ -365,6 +367,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
                 ],
                 "blind_spot": options.get(CONF_BLIND_SPOT_ELEVATION),
             },
+            climate_debug=self._climate_debug,
         )
 
     async def async_handle_state_change(self, state: int, options):
@@ -421,6 +424,7 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
                         if self._inverse_state
                         else options.get(CONF_SUNSET_POS)
                     ),
+            climate_debug=self._climate_debug,
                 )
         else:
             self.logger.debug("Timed refresh but control toggle is off")
@@ -735,6 +739,29 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
         self.logger.debug(
             "Climate mode control method was set to %s", self.control_method
         )
+
+        # ── Diagnostic snapshot — exposed via sensor.py ────────────────────
+        # Captures every intermediate value used in the decision tree so that
+        # unexpected cover positions can be debugged without reading log files.
+        inside_raw = climate_data.inside_temperature
+        outside_raw = climate_data.outside_temperature
+        self._climate_debug = {
+            "is_winter": climate_data.is_winter,
+            "is_summer": climate_data.is_summer,
+            "is_presence": climate_data.is_presence,
+            "sun_in_window": climate_state_obj.cover.valid,
+            "temp_inside": float(inside_raw) if inside_raw is not None else None,
+            "temp_outside": float(outside_raw) if outside_raw is not None else None,
+            "temp_used_winter": climate_data.temperature_for_winter,
+            "temp_used_summer": climate_data.temperature_for_summer,
+            "temp_low": climate_data.temp_low,
+            "temp_high": climate_data.temp_high,
+            "temp_switch": climate_data.temp_switch,
+            "is_sunny": climate_data.is_sunny,
+            "lux_below_threshold": climate_data.lux,
+            "irradiance_below_threshold": climate_data.irradiance,
+            "active_branch": self.control_method,
+        }
 
     @staticmethod
     def vertical_data(options):

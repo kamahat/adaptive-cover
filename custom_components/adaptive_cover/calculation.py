@@ -17,6 +17,7 @@ from .helpers import get_domain, get_safe_state
 from .sun import SunData
 from .config_context_adapter import ConfigContextAdapter
 
+
 @dataclass
 class AdaptiveGeneralCover(ABC):
     """Collect common data."""
@@ -284,6 +285,43 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
 
         Uses `is not None` rather than a truthy check to correctly handle
         a temperature of 0.0°C (which is falsy but perfectly valid).
+
+        .. deprecated::
+            Prefer `temperature_for_winter` / `temperature_for_summer` which
+            apply the correct sensor source for each seasonal check.
+        """
+        if self.temp_switch:
+            outside = self.outside_temperature
+            if outside is not None:
+                return float(outside)
+        inside = self.inside_temperature
+        if inside is not None:
+            return float(inside)
+        return None
+
+    @property
+    def temperature_for_winter(self) -> float | None:
+        """Temperature used for the winter (heating) check.
+
+        Always prefers the **inside** sensor: the room must actually be cold
+        before we open the blind to capture solar heat.
+        Falls back to outside temperature only when no inside sensor is set.
+        """
+        inside = self.inside_temperature
+        if inside is not None:
+            return float(inside)
+        outside = self.outside_temperature
+        if outside is not None:
+            return float(outside)
+        return None
+
+    @property
+    def temperature_for_summer(self) -> float | None:
+        """Temperature used for the summer (cooling) check.
+
+        When `temp_switch=True` uses the **outside** sensor: external heat is
+        what we are guarding against, even if the room is still comfortable.
+        Falls back to inside temperature when no outside sensor is available.
         """
         if self.temp_switch:
             outside = self.outside_temperature
@@ -313,15 +351,21 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
 
     @property
     def is_winter(self) -> bool:
-        """Check if temperature is below threshold."""
-        if self.temp_low is not None and self.get_current_temperature is not None:
-            is_it = self.get_current_temperature < self.temp_low
+        """Check if the room temperature is below the heating threshold.
+
+        Uses `temperature_for_winter` (inside sensor preferred) so that a cold
+        outdoor temperature cannot trigger a 100 % open when the room is
+        already warm.
+        """
+        temp = self.temperature_for_winter
+        if self.temp_low is not None and temp is not None:
+            is_it = temp < self.temp_low
         else:
             is_it = False
 
         self.logger.debug(
-            "is_winter(): current_temperature < temp_low: %s < %s = %s",
-            self.get_current_temperature,
+            "is_winter(): inside_temp < temp_low: %s < %s = %s",
+            temp,
             self.temp_low,
             is_it,
         )
@@ -339,15 +383,20 @@ class ClimateCoverData:  # pylint: disable=too-many-instance-attributes
 
     @property
     def is_summer(self) -> bool:
-        """Check if temperature is over threshold."""
-        if self.temp_high is not None and self.get_current_temperature is not None:
-            is_it = self.get_current_temperature > self.temp_high and self.outside_high
+        """Check if temperature exceeds the cooling threshold.
+
+        Uses `temperature_for_summer` (outside sensor when temp_switch=True)
+        so that incoming external heat is detected even before the room warms up.
+        """
+        temp = self.temperature_for_summer
+        if self.temp_high is not None and temp is not None:
+            is_it = temp > self.temp_high and self.outside_high
         else:
             is_it = False
 
         self.logger.debug(
-            "is_summer(): current_temp > temp_high and outside_high?: %s > %s and %s = %s",
-            self.get_current_temperature,
+            "is_summer(): temp > temp_high and outside_high?: %s > %s and %s = %s",
+            temp,
             self.temp_high,
             self.outside_high,
             is_it,
