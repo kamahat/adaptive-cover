@@ -424,7 +424,6 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
                         if self._inverse_state
                         else options.get(CONF_SUNSET_POS)
                     ),
-            climate_debug=self._climate_debug,
                 )
         else:
             self.logger.debug("Timed refresh but control toggle is off")
