@@ -2,7 +2,7 @@
   "domain": "adaptive_cover",
   "name": "Adaptive Cover",
   "codeowners": [
-    "@basbruss"
+    "@kamahat"
   ],
   "config_flow": true,
   "dependencies": [
@@ -13,12 +13,12 @@
     "sensor",
     "weather"
   ],
-  "documentation": "https://github.com/basbruss/adaptive-cover",
+  "documentation": "https://github.com/kamahat/adaptive-cover",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/basbruss/adaptive-cover/issues",
+  "issue_tracker": "https://github.com/kamahat/adaptive-cover/issues",
   "requirements": [
     "astral",
     "pandas"
   ],
-  "version": "1.5.0"
+  "version": "1.7.1"
 }
