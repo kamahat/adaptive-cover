@@ -70,7 +70,7 @@ async def async_setup_entry(
     async_add_entities([sensor, start, end, control, climate_diag])
 
 
-# ── Base mixin ───────────────────────────────────────────────────────────────
+# ── Base mixin ─────────────────────────────────────────────────────────────────────────────────
 
 class _AdaptiveCoverBase(CoordinatorEntity[AdaptiveDataUpdateCoordinator], SensorEntity):
     """Shared boilerplate for all Adaptive Cover sensor entities."""
@@ -114,7 +114,7 @@ class _AdaptiveCoverBase(CoordinatorEntity[AdaptiveDataUpdateCoordinator], Senso
         )
 
 
-# ── Existing entities (unchanged behaviour) ──────────────────────────────────
+# ── Existing entities (unchanged behaviour) ────────────────────────────────────────────
 
 class AdaptiveCoverSensorEntity(_AdaptiveCoverBase):
     """Adaptive Cover Position Sensor."""
@@ -191,7 +191,7 @@ class AdaptiveCoverControlSensorEntity(_AdaptiveCoverBase):
         return self.data.states["control"]
 
 
-# ── NEW: Climate Debug diagnostic sensor ─────────────────────────────────────
+# ── NEW: Climate Debug diagnostic sensor ───────────────────────────────────────────────
 
 class AdaptiveCoverClimateDiagSensor(_AdaptiveCoverBase):
     """Diagnostic sensor exposing every intermediate value of the climate decision tree.
@@ -226,23 +226,5 @@ class AdaptiveCoverClimateDiagSensor(_AdaptiveCoverBase):
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
-        """Return the full climate decision snapshot.
-
-        Keys exposed:
-          is_winter              — bool : room temp < temp_low
-          is_summer              — bool : ref temp > temp_high AND outside_high
-          is_presence            — bool : presence sensor state
-          sun_in_window          — bool : cover.valid (sun in FOV)
-          temp_inside            — float|None : raw inside sensor value
-          temp_outside           — float|None : raw outside sensor value
-          temp_used_winter       — float|None : value actually compared to temp_low
-          temp_used_summer       — float|None : value actually compared to temp_high
-          temp_low               — float : configured winter threshold
-          temp_high              — float : configured summer threshold
-          temp_switch            — bool : outside temp used for summer check
-          is_sunny               — bool : weather matches sunny conditions
-          lux_below_threshold    — bool : lux sensor below threshold
-          irradiance_below_threshold — bool : irradiance sensor below threshold
-          active_branch          — str  : summer | winter | intermediate
-        """
+        """Return the full climate decision snapshot."""
         return self.data.climate_debug
