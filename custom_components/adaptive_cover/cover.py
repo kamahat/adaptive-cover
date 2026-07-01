@@ -212,9 +212,12 @@ class AdaptiveCoverAll(CoverEntity):
       - ``turn_off`` → disables adaptive control on every entry.
       - ``is_closed`` → True when every known cover is at 0 %.
       - ``current_cover_position`` → average position across all covers.
+
+    Entity name comes from the ``all_blinds`` translation key — "All Blinds"
+    in English, "Les volets" in French.
     """
 
-    _attr_has_entity_name = False  # full name set directly — no device prefix in Alexa
+    _attr_has_entity_name = False  # no device prefix — voice assistants see the raw name
     _attr_should_poll = False
     _attr_device_class = CoverDeviceClass.BLIND
     _attr_supported_features = (
@@ -223,12 +226,20 @@ class AdaptiveCoverAll(CoverEntity):
         | CoverEntityFeature.STOP
         | CoverEntityFeature.SET_POSITION
     )
-    _attr_name = "Les volets"  # Alexa: "ouvre / ferme les volets"
+
+    _NAME_MAP = {
+        "en": "All Blinds",
+        "fr": "Les volets",
+        "nl": "Alle jaloezieën",
+        "es": "Todas las persianas",
+    }
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Tie this entity to the hub config entry's own device."""
         self.hass = hass
         self._config_entry = config_entry
+        lang = (hass.config.language or "en").split("-")[0]
+        self._attr_name = self._NAME_MAP.get(lang, self._NAME_MAP["en"])
         self._attr_unique_id = f"{config_entry.entry_id}_all_blinds"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, config_entry.entry_id)},

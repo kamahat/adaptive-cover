@@ -453,9 +453,28 @@
     }
   },
   "entity": {
+    "cover": {
+      "all_blinds": {
+        "name": "All Blinds"
+      }
+    },
     "switch": {
       "security_toggle": {
         "name": "Security mode"
+      },
+      "all_blinds_control": {
+        "name": "Toggle control All Blinds"
+      },
+      "all_blinds_security": {
+        "name": "Toggle security All Blinds"
+      }
+    },
+    "scene": {
+      "all_blinds_open": {
+        "name": "Open All Blinds"
+      },
+      "all_blinds_closed": {
+        "name": "Close All Blinds"
       }
     }
   }

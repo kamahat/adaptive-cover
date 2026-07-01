@@ -49,7 +49,9 @@ from .const import (
     CONF_DELTA_POSITION,
     CONF_DELTA_TIME,
     CONF_DISTANCE,
+    CONF_EFFECTIVE_MINIMUM,
     CONF_ENABLE_BLIND_SPOT,
+    CONF_ENABLE_EFFECTIVE_MINIMUM,
     CONF_ENABLE_MAX_POSITION,
     CONF_ENABLE_MIN_POSITION,
     CONF_END_ENTITY,
@@ -136,6 +138,12 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
         self._inverse_state = self.config_entry.options.get(CONF_INVERSE_STATE, False)
         self._use_interpolation = self.config_entry.options.get(CONF_INTERP, False)
         self._track_end_time = self.config_entry.options.get(CONF_RETURN_SUNSET)
+        self._enable_effective_minimum = self.config_entry.options.get(
+            CONF_ENABLE_EFFECTIVE_MINIMUM, False
+        )
+        self._effective_minimum = self.config_entry.options.get(
+            CONF_EFFECTIVE_MINIMUM, 0
+        )
         self._temp_toggle = None
         self._control_toggle = None
         self._manual_toggle = None
@@ -548,6 +556,8 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
         self.end_value = options.get(CONF_INTERP_END)
         self.normal_list = options.get(CONF_INTERP_LIST)
         self.new_list = options.get(CONF_INTERP_LIST_NEW)
+        self._enable_effective_minimum = options.get(CONF_ENABLE_EFFECTIVE_MINIMUM, False)
+        self._effective_minimum = options.get(CONF_EFFECTIVE_MINIMUM, 0)
 
     def _update_manager_and_covers(self):
         self.manager.add_covers(self.entities)
@@ -727,6 +737,8 @@ class AdaptiveDataUpdateCoordinator(DataUpdateCoordinator[AdaptiveCoverData]):
             options.get(CONF_ENABLE_BLIND_SPOT, False),
             options.get(CONF_MIN_ELEVATION, None),
             options.get(CONF_MAX_ELEVATION, None),
+            options.get(CONF_ENABLE_EFFECTIVE_MINIMUM, False),
+            options.get(CONF_EFFECTIVE_MINIMUM, 0),
         ]
 
     def get_climate_data(self, options):

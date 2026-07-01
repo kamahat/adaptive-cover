@@ -39,6 +39,8 @@
           "set_azimuth": "Raam Azimuth",
           "window_height": "Raamhoogte",
           "distance_shaded_area": "Beschaduwde gebied",
+          "effective_minimum": "Effectieve minimale positie",
+          "enable_effective_minimum": "Effectief minimum inschakelen",
           "default_percentage": "Standaard positie",
           "min_position": "Minimale positie",
           "max_position": "Maximale positie",
@@ -60,6 +62,8 @@
           "set_azimuth": "Stel Azimuth in",
           "window_height": "Specificeer raamhoogte in meters",
           "distance_shaded_area": "Afstand van bekleding tot beschaduwd gebied in meters",
+          "effective_minimum": "Dekkingspositie waarbij het raam volledig is afgedekt (bijv. 30 % voor externe lamellen)",
+          "enable_effective_minimum": "Activeert de effectieve bereikmapping voor positieberekening wanneer het raam volledig is bedekt bij een niet-gesloten toestand (bijv. tot 30 %)",
           "default_percentage": "Standaard bekledingspositie als percentage",
           "min_position": "Minimale verstelbare bekledingspositie als percentage",
           "max_position": "Maximale verstelbare bekledingspositie als percentage",
@@ -118,6 +122,8 @@
           "window_height": "Zonneschermhoogte",
           "angle": "Zonneschermhoek",
           "distance_shaded_area": "Beschaduwde gebied",
+          "effective_minimum": "Effectieve minimale positie",
+          "enable_effective_minimum": "Effectief minimum inschakelen",
           "default_percentage": "Standaard positie",
           "min_position": "Minimale positie",
           "max_position": "Maximale positie",
@@ -141,6 +147,8 @@
           "length_awning": "Totale spanwijdte van het zonnescherm in meters",
           "angle": "Hoek van het bevestigde zonnescherm gemeten loodrecht vanaf de muur naar de grond",
           "distance_shaded_area": "Afstand van bekleding tot beschaduwd gebied in meters",
+          "effective_minimum": "Dekkingspositie waarbij het raam volledig is afgedekt (bijv. 30 % voor externe lamellen)",
+          "enable_effective_minimum": "Activeert de effectieve bereikmapping voor positieberekening wanneer het raam volledig is bedekt bij een niet-gesloten toestand (bijv. tot 30 %)",
           "default_percentage": "Standaard bekledingspositie als percentage",
           "min_position": "Minimale verstelbare bekledingspositie als percentage",
           "max_position": "Maximale verstelbare bekledingspositie als percentage",
@@ -269,6 +277,8 @@
           "set_azimuth": "Raam Azimuth",
           "window_height": "Raamhoogte",
           "distance_shaded_area": "Beschaduwde gebied",
+          "effective_minimum": "Effectieve minimale positie",
+          "enable_effective_minimum": "Effectief minimum inschakelen",
           "default_percentage": "Standaard positie",
           "min_position": "Minimale positie",
           "max_position": "Maximale positie",
@@ -290,6 +300,8 @@
           "set_azimuth": "Stel Azimuth in",
           "window_height": "Specificeer raamhoogte in meters",
           "distance_shaded_area": "Afstand van bekleding tot beschaduwd gebied in meters",
+          "effective_minimum": "Dekkingspositie waarbij het raam volledig is afgedekt (bijv. 30 % voor externe lamellen)",
+          "enable_effective_minimum": "Activeert de effectieve bereikmapping voor positieberekening wanneer het raam volledig is bedekt bij een niet-gesloten toestand (bijv. tot 30 %)",
           "default_percentage": "Standaard bekledingspositie als percentage",
           "min_position": "Minimale verstelbare bekledingspositie als percentage",
           "max_position": "Maximale verstelbare bekledingspositie als percentage",
@@ -340,6 +352,8 @@
           "window_height": "Zonneschermhoogte",
           "angle": "Zonneschermhoek",
           "distance_shaded_area": "Beschaduwde gebied",
+          "effective_minimum": "Effectieve minimale positie",
+          "enable_effective_minimum": "Effectief minimum inschakelen",
           "default_percentage": "Standaard positie",
           "min_position": "Minimale positie",
           "max_position": "Maximale positie",
@@ -363,6 +377,8 @@
           "length_awning": "Totale spanwijdte van het zonnescherm in meters",
           "angle": "Hoek van het bevestigde zonnescherm gemeten loodrecht vanaf de muur naar de grond",
           "distance_shaded_area": "Afstand van bekleding tot beschaduwd gebied in meters",
+          "effective_minimum": "Dekkingspositie waarbij het raam volledig is afgedekt (bijv. 30 % voor externe lamellen)",
+          "enable_effective_minimum": "Activeert de effectieve bereikmapping voor positieberekening wanneer het raam volledig is bedekt bij een niet-gesloten toestand (bijv. tot 30 %)",
           "default_percentage": "Standaard bekledingspositie als percentage",
           "min_position": "Minimale verstelbare bekledingspositie als percentage",
           "max_position": "Maximale verstelbare bekledingspositie als percentage",
@@ -461,6 +477,40 @@
       "options": {
         "mode1": "eenrichting (0% = dicht / 100% = open)",
         "mode2": "twee-richtings (0% = dicht / 50% = open / 100% = dicht)"
+      }
+    }
+  },
+  "entity": {
+    "select": {
+      "adaptive_control_mode": {
+        "name": "Bedieningsmodus",
+        "state": {
+          "auto": "Auto",
+          "off": "Uit",
+          "all_open": "Alles open",
+          "all_closed": "Alles dicht"
+        }
+      }
+    },
+    "cover": {
+      "all_blinds": {
+        "name": "Alle jaloezieën"
+      }
+    },
+    "switch": {
+      "all_blinds_control": {
+        "name": "Bediening alle jaloezieën"
+      },
+      "all_blinds_security": {
+        "name": "Beveiliging alle jaloezieën"
+      }
+    },
+    "scene": {
+      "all_blinds_open": {
+        "name": "Open alle jaloezieën"
+      },
+      "all_blinds_closed": {
+        "name": "Sluit alle jaloezieën"
       }
     }
   }

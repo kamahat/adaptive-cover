@@ -73,6 +73,13 @@ CONF_MANUAL_OVERRIDE_RESET = "manual_override_reset"
 CONF_MANUAL_THRESHOLD = "manual_threshold"
 CONF_MANUAL_IGNORE_INTERMEDIATE = "manual_ignore_intermediate"
 
+# Effective minimum position — remaps the geometric 0–100 calculation scale
+# so that "fully closed window" maps to a user-configured position on the
+# cover entity (e.g. 30 % for external slatted blinds that are already
+# fully closed at 30 %). Only applies to vertical blinds (cover_blind).
+CONF_EFFECTIVE_MINIMUM = "effective_minimum"
+CONF_ENABLE_EFFECTIVE_MINIMUM = "enable_effective_minimum"
+
 # Security mode — closes covers when nobody is home.
 # The value is NOT stored in config options; the switch entity manages the
 # runtime toggle directly on the coordinator (``coordinator.security_toggle``).

@@ -41,10 +41,11 @@ class PipelineSnapshot:
     skip_move:
         Set to ``True`` by a handler to suppress any cover movement
         entirely for this cycle.
+
     """
 
-    hass: "HomeAssistant"
-    coordinator: "AdaptiveDataUpdateCoordinator"
+    hass: HomeAssistant
+    coordinator: AdaptiveDataUpdateCoordinator
 
     # --- inputs (set by coordinator before entering the chain) ---
     calculated_position: int = 0

@@ -45,6 +45,8 @@
           "set_azimuth": "Window Azimuth",
           "window_height": "Window Height",
           "distance_shaded_area": "Shaded area",
+          "effective_minimum": "Effective Minimum Position",
+          "enable_effective_minimum": "Enable Effective Minimum",
           "default_percentage": "Default Position",
           "min_position": "Minimum Position",
           "max_position": "Maximum Position",
@@ -67,6 +69,8 @@
           "set_azimuth": "Adjust Azimuth",
           "window_height": "Specify window height in meters",
           "distance_shaded_area": "Distance from cover to shaded area in meters",
+          "effective_minimum": "Cover position at which the window is fully covered (e.g., 30 % for slatted external blinds)",
+          "enable_effective_minimum": "Enables the mapping of effective range for cover position calculation in case the window is fully covered at a non-closed state (e.g., at 30 %)",
           "default_percentage": "Default cover position as a percentage",
           "min_position": "Minimum adjustable cover position as a percentage",
           "max_position": "Maximum adjustable cover position as a percentage",
@@ -125,6 +129,8 @@
           "window_height": "Awning Height",
           "angle": "Awning Angle",
           "distance_shaded_area": "Shaded area",
+          "effective_minimum": "Effective Minimum Position",
+          "enable_effective_minimum": "Enable Effective Minimum",
           "default_percentage": "Default Position",
           "min_position": "Minimum Position",
           "max_position": "Maximum Position",
@@ -149,6 +155,8 @@
           "length_awning": "Total span length in meters",
           "angle": "Angle of the attached awning measured perpendicular from the wall to the ground",
           "distance_shaded_area": "Distance from cover to shaded area in meters",
+          "effective_minimum": "Cover position at which the window is fully covered (e.g., 30 % for slatted external blinds)",
+          "enable_effective_minimum": "Enables the mapping of effective range for cover position calculation in case the window is fully covered at a non-closed state (e.g., at 30 %)",
           "default_percentage": "Default cover position as a percentage",
           "min_position": "Minimum adjustable cover position as a percentage",
           "max_position": "Maximum adjustable cover position as a percentage",
@@ -282,6 +290,8 @@
           "set_azimuth": "Window Azimuth",
           "window_height": "Window Height",
           "distance_shaded_area": "Shaded area",
+          "effective_minimum": "Effective Minimum Position",
+          "enable_effective_minimum": "Enable Effective Minimum",
           "default_percentage": "Default Position",
           "min_position": "Minimum Position",
           "max_position": "Maximum Position",
@@ -304,6 +314,8 @@
           "set_azimuth": "Adjust Azimuth",
           "window_height": "Specify window height in meters",
           "distance_shaded_area": "Distance from cover to shaded area in meters",
+          "effective_minimum": "Cover position at which the window is fully covered (e.g., 30 % for slatted external blinds)",
+          "enable_effective_minimum": "Enables the mapping of effective range for cover position calculation in case the window is fully covered at a non-closed state (e.g., at 30 %)",
           "default_percentage": "Default cover position as a percentage",
           "min_position": "Minimum adjustable cover position as a percentage",
           "max_position": "Maximum adjustable cover position as a percentage",
@@ -362,6 +374,8 @@
           "window_height": "Awning Height",
           "angle": "Awning Angle",
           "distance_shaded_area": "Shaded area",
+          "effective_minimum": "Effective Minimum Position",
+          "enable_effective_minimum": "Enable Effective Minimum",
           "default_percentage": "Default Position",
           "min_position": "Minimum Position",
           "max_position": "Maximum Position",
@@ -386,6 +400,8 @@
           "length_awning": "Total span length in meters",
           "angle": "Angle of the attached awning measured perpendicular from the wall to the ground",
           "distance_shaded_area": "Distance from cover to shaded area in meters",
+          "effective_minimum": "Cover position at which the window is fully covered (e.g., 30 % for slatted external blinds)",
+          "enable_effective_minimum": "Enables the mapping of effective range for cover position calculation in case the window is fully covered at a non-closed state (e.g., at 30 %)",
           "default_percentage": "Default cover position as a percentage",
           "min_position": "Minimum adjustable cover position as a percentage",
           "max_position": "Maximum adjustable cover position as a percentage",
@@ -503,9 +519,28 @@
         }
       }
     },
+    "cover": {
+      "all_blinds": {
+        "name": "All Blinds"
+      }
+    },
     "switch": {
       "security_toggle": {
         "name": "Security mode"
+      },
+      "all_blinds_control": {
+        "name": "Toggle control All Blinds"
+      },
+      "all_blinds_security": {
+        "name": "Toggle security All Blinds"
+      }
+    },
+    "scene": {
+      "all_blinds_open": {
+        "name": "Open All Blinds"
+      },
+      "all_blinds_closed": {
+        "name": "Close All Blinds"
       }
     }
   }

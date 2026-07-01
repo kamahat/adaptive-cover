@@ -45,6 +45,8 @@
             "set_azimuth": "Azimut de la fenêtre",
             "window_height": "Hauteur de la fenêtre",
             "distance_shaded_area": "Zone ombrée",
+            "enable_effective_minimum": "Activer le minimum effectif",
+            "effective_minimum": "Position minimale effective",
             "default_percentage": "Position par défaut",
             "min_position": "Position minimale",
             "max_position": "Position maximale",
@@ -67,6 +69,8 @@
             "set_azimuth": "Ajuster l'azimut",
             "window_height": "Spécifier la hauteur de la fenêtre en mètres",
             "distance_shaded_area": "Distance entre le volet et la zone à ombrager en bas en mètres",
+            "enable_effective_minimum": "Active le mappage de la plage effective pour le calcul de la position lorsque la fenêtre est entièrement couverte à un état non fermé (ex., à 30 %)",
+            "effective_minimum": "Position du volet à laquelle la fenêtre est entièrement couverte (ex., 30 % pour les stores extérieurs à lamelles)",
             "default_percentage": "Position du volet par défaut en journée en pourcentage",
             "min_position": "Position de volet réglable minimale en pourcentage",
             "max_position": "Position du volet réglable maximale en pourcentage",
@@ -125,6 +129,8 @@
             "window_height": "Hauteur du auvent",
             "angle": "Angle du auvent",
             "distance_shaded_area": "Zone ombrée",
+            "enable_effective_minimum": "Activer le minimum effectif",
+            "effective_minimum": "Position minimale effective",
             "default_percentage": "Position par défaut",
             "min_position": "Position minimale",
             "max_position": "Position maximale",
@@ -149,6 +155,8 @@
             "length_awning": "Longueur totale du auvent en mètres",
             "angle": "Angle du auvent fixé mesuré perpendiculairement du mur au sol",
             "distance_shaded_area": "Distance entre la couverture et la zone ombragée en mètres",
+            "enable_effective_minimum": "Active le mappage de la plage effective pour le calcul de la position lorsque la fenêtre est entièrement couverte à un état non fermé (ex., à 30 %)",
+            "effective_minimum": "Position du volet à laquelle la fenêtre est entièrement couverte (ex., 30 % pour les stores extérieurs à lamelles)",
             "default_percentage": "Position du volet par défaut en pourcentage",
             "min_position": "Position minimale du volet en pourcentage",
             "max_position": "Position maximale du volet en pourcentage",
@@ -282,6 +290,8 @@
             "set_azimuth": "Azimut de la fenêtre",
             "window_height": "Hauteur de la fenêtre",
             "distance_shaded_area": "Zone ombrée",
+            "enable_effective_minimum": "Activer le minimum effectif",
+            "effective_minimum": "Position minimale effective",
             "default_percentage": "Position par défaut",
             "min_position": "Position minimale",
             "max_position": "Position maximale",
@@ -304,6 +314,8 @@
           "set_azimuth": "Ajuster l'azimut",
           "window_height": "Spécifier la hauteur de la fenêtre en mètres",
           "distance_shaded_area": "Distance entre la couverture et la zone ombragée en mètres",
+          "enable_effective_minimum": "Active le mappage de la plage effective pour le calcul de la position lorsque la fenêtre est entièrement couverte à un état non fermé (ex., à 30 %)",
+          "effective_minimum": "Position du volet à laquelle la fenêtre est entièrement couverte (ex., 30 % pour les stores extérieurs à lamelles)",
           "default_percentage": "Position de couverture par défaut en pourcentage",
           "min_position": "Position de couverture réglable minimale en pourcentage",
           "max_position": "Position de couverture réglable maximale en pourcentage",
@@ -362,6 +374,8 @@
       		  "window_height": "Hauteur du auvent",
       		  "angle": "Angle du auvent",
       		  "distance_shaded_area": "Zone ombrée",
+      		  "enable_effective_minimum": "Activer le minimum effectif",
+      		  "effective_minimum": "Position minimale effective",
       		  "default_percentage": "Position par défaut",
       		  "min_position": "Position minimale",
       		  "max_position": "Position maximale",
@@ -386,6 +400,8 @@
               "length_awning": "Longueur totale de la portée en mètres",
               "angle": "Angle de l'auvent fixé mesuré perpendiculairement du mur au sol",
               "distance_shaded_area": "Distance entre la couverture et la zone ombragée en mètres",
+              "enable_effective_minimum": "Active le mappage de la plage effective pour le calcul de la position lorsque la fenêtre est entièrement couverte à un état non fermé (ex., à 30 %)",
+              "effective_minimum": "Position du volet à laquelle la fenêtre est entièrement couverte (ex., 30 % pour les stores extérieurs à lamelles)",
               "default_percentage": "Position de couverture par défaut en pourcentage",
               "min_position": "Position de couverture réglable minimale en pourcentage",
               "max_position": "Position de couverture réglable maximale en pourcentage",
@@ -501,6 +517,27 @@
             "all_open": "Tous ouverts",
             "all_closed": "Tous fermés"
           }
+        }
+      },
+      "cover": {
+        "all_blinds": {
+          "name": "Les volets"
+        }
+      },
+      "switch": {
+        "all_blinds_control": {
+          "name": "Les volets"
+        },
+        "all_blinds_security": {
+          "name": "Sécurité volets"
+        }
+      },
+      "scene": {
+        "all_blinds_open": {
+          "name": "Volets ouverts"
+        },
+        "all_blinds_closed": {
+          "name": "Volets fermés"
         }
       }
     }

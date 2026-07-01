@@ -90,6 +90,7 @@ class SecurityHandler:
         -------
         int
             Position to apply (0–100).
+
         """
         if snapshot.climate_mode and snapshot.control_method in (
             "intermediate",

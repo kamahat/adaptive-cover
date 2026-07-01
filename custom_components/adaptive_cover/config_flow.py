@@ -25,7 +25,9 @@ from .const import (
     CONF_DELTA_POSITION,
     CONF_DELTA_TIME,
     CONF_DISTANCE,
+    CONF_EFFECTIVE_MINIMUM,
     CONF_ENABLE_BLIND_SPOT,
+    CONF_ENABLE_EFFECTIVE_MINIMUM,
     CONF_END_ENTITY,
     CONF_END_TIME,
     CONF_ENTITIES,
@@ -174,6 +176,10 @@ VERTICAL_OPTIONS = vol.Schema(
             selector.NumberSelectorConfig(
                 min=0.1, max=2, step=0.1, mode="slider", unit_of_measurement="m"
             )
+        ),
+        vol.Optional(CONF_ENABLE_EFFECTIVE_MINIMUM, default=False): bool,
+        vol.Optional(CONF_EFFECTIVE_MINIMUM, default=0): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=99)
         ),
     }
 ).extend(OPTIONS.schema)
@@ -662,6 +668,10 @@ class ConfigFlowHandler(ConfigFlow, domain=DOMAIN):
                 CONF_IRRADIANCE_ENTITY: self.config.get(CONF_IRRADIANCE_ENTITY),
                 CONF_IRRADIANCE_THRESHOLD: self.config.get(CONF_IRRADIANCE_THRESHOLD),
                 CONF_OUTSIDE_THRESHOLD: self.config.get(CONF_OUTSIDE_THRESHOLD),
+                CONF_EFFECTIVE_MINIMUM: self.config.get(CONF_EFFECTIVE_MINIMUM, 0),
+                CONF_ENABLE_EFFECTIVE_MINIMUM: self.config.get(
+                    CONF_ENABLE_EFFECTIVE_MINIMUM, False
+                ),
             },
         )
 

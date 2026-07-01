@@ -12,7 +12,7 @@ from homeassistant.core import HomeAssistant
 from numpy import cos, sin, tan
 from numpy import radians as rad
 
-from .helpers import get_domain, get_safe_state, is_presence_detected, state_attr
+from .helpers import get_domain, get_safe_state, is_presence_detected
 from .sun import SunData
 from .config_context_adapter import ConfigContextAdapter
 
@@ -43,6 +43,8 @@ class AdaptiveGeneralCover(ABC):
     blind_spot_on: bool
     min_elevation: int
     max_elevation: int
+    enable_effective_min: bool
+    effective_min: int
     sun_data: SunData = field(init=False)
 
     def __post_init__(self):
@@ -561,6 +563,12 @@ class AdaptiveVerticalCover(AdaptiveGeneralCover):
             "Converting height to percentage: %s / %s * 100", position, self.h_win
         )
         result = position / self.h_win * 100
+        if (
+            self.enable_effective_min
+            and self.effective_min
+            and self.effective_min > 0
+        ):
+            result = self.effective_min + result * (100 - self.effective_min) / 100
         return round(result)
 
 
@@ -586,6 +594,12 @@ class AdaptiveHorizontalCover(AdaptiveVerticalCover):
     def calculate_percentage(self) -> float:
         """Convert awn length to percentage or default value."""
         result = self.calculate_position() / self.awn_length * 100
+        if (
+            self.enable_effective_min
+            and self.effective_min
+            and self.effective_min > 0
+        ):
+            result = self.effective_min + result * (100 - self.effective_min) / 100
         return round(result)
 
 

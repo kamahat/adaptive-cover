@@ -46,10 +46,10 @@ PLATFORMS = [
 ]
 
 # Platforms used by the singleton "All Blinds" hub entry:
-#   - cover  : aggregate "Tous les volets" — Alexa "ouvre / ferme les volets"
-#   - switch : "Les volets" ON/OFF        — Alexa "active / désactive les volets"
+#   - cover  : aggregate "All Blinds"
+#   - switch : "Toggle control All Blinds", "Toggle security All Blinds"
 #   - select : 4-state UI dropdown        — HA dashboard
-#   - scene  : "Volets ouverts/fermés"    — automations / shortcuts
+#   - scene  : "Open All Blinds" / "Close All Blinds"
 HUB_PLATFORMS = [Platform.COVER, Platform.SWITCH, Platform.SELECT, Platform.SCENE]
 
 CONF_SUN = ["sun.sun"]

@@ -6,12 +6,8 @@ Two scenes are exposed on the "All Blinds" hub device:
   all_closed — every cover moves to 0 %   (manual override activated).
 
 These scenes are primarily useful for HA automations and shortcuts.
-For Alexa voice control of open / close, the aggregate cover entity
-``cover.tous_les_volets`` already handles "Alexa, ouvre / ferme les volets"
-natively without needing these scenes.
-
-Adaptive control ON/OFF is handled by the hub switch entity (see switch.py)
-which Alexa understands as "active / désactive les volets".
+For Alexa voice control of open / close, use the aggregate cover entity.
+Adaptive control ON/OFF is handled by the hub switch entity (see switch.py).
 """
 
 from __future__ import annotations
@@ -56,11 +52,21 @@ class AdaptiveCoverScene(Scene):
     ``all_closed`` → every cover to 0 %,   manual override activated.
     """
 
-    _attr_has_entity_name = False  # full name set directly — no device prefix in Alexa
+    _attr_has_entity_name = False  # no device prefix — voice assistants see the raw name
 
-    _NAMES = {
-        "all_open":   "Volets ouverts",   # Alexa: "allume Volets ouverts"
-        "all_closed": "Volets fermés",    # Alexa: "allume Volets fermés"
+    _NAME_MAP = {
+        "all_open": {
+            "en": "Open All Blinds",
+            "fr": "Volets ouverts",
+            "nl": "Open alle jaloezieën",
+            "es": "Abrir todas las persianas",
+        },
+        "all_closed": {
+            "en": "Close All Blinds",
+            "fr": "Volets fermés",
+            "nl": "Sluit alle jaloezieën",
+            "es": "Cerrar todas las persianas",
+        },
     }
 
     def __init__(
@@ -73,7 +79,8 @@ class AdaptiveCoverScene(Scene):
         """Initialise the scene for *mode* (``all_open`` / ``all_closed``)."""
         self.hass = hass
         self._mode = mode
-        self._attr_name = self._NAMES[mode]
+        lang = (hass.config.language or "en").split("-")[0]
+        self._attr_name = self._NAME_MAP[mode].get(lang, self._NAME_MAP[mode]["en"])
         # Suffix "_v2" forces fresh entity registry entry (old entry had device prefix in name)
         self._attr_unique_id = f"{config_entry.entry_id}_scene_{mode}_v2"
         self._attr_device_info = device_info

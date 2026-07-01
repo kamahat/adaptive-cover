@@ -272,8 +272,12 @@ Security mode closes covers automatically when nobody is home, regardless of the
 
 | Variables         | Default | Range | Description                                                                                 |
 | ----------------- | ------- | ----- | ------------------------------------------------------------------------------------------- |
-| Window Height     | 2.1     | 0.1-6 | Length of fully extended cover/window                                                       |
-| Glare Zone        | 0.5     | 0.1-2 | Objects within this distance of the cover receive direct sunlight |
+| Window Height                 | 2.1     | 0.1-6 | Length of fully extended cover/window                                                       |
+| Glare Zone                    | 0.5     | 0.1-2 | Objects within this distance of the cover receive direct sunlight |
+| Effective Minimum Position     | 0       | 0-99  | Cover position at which the window is fully covered (e.g., 30% for slatted external blinds) |
+| Enable Effective Minimum       | `False` | —     | Remaps sun-geometry-calculated positions to the effective_min–100 physical range            |
+
+> When enabled, sun-geometry positions are remapped from 0–100% (logical) to effective_min–100% (physical). Configuration values (`min_position`, `max_position`, `default_height`, `sunset_pos`) remain in physical space and are unaffected.
 
 ### Horizontal
 
@@ -376,12 +380,12 @@ The **All Blinds** device (auto-created on first setup) exposes:
 
 | Entity | Name | Description |
 | ------ | ---- | ----------- |
-| `cover.*` | **Les volets** | Aggregate cover — open/close/set position acts on all covers |
-| `switch.*` | **Les volets** | ON/OFF adaptive control across all entries |
-| `switch.*` | **Sécurité volets** | ON/OFF **security mode** across all entries that have a presence entity |
+| `cover.*` | **All Blinds** | Aggregate cover — open/close/set position acts on all covers |
+| `switch.*` | **Toggle control All Blinds** | ON/OFF adaptive control across all entries |
+| `switch.*` | **Toggle security All Blinds** | ON/OFF **security mode** across all entries that have a presence entity |
 | `select.*` | **Control mode** | 4-state: Auto / Off / All open (100%) / All closed (0%) |
-| `scene.*_all_open` | **Blinds open** | Sets all covers to 100% |
-| `scene.*_all_closed` | **Blinds closed** | Sets all covers to 0% |
+| `scene.*_all_open` | **Open All Blinds** | Sets all covers to 100% |
+| `scene.*_all_closed` | **Close All Blinds** | Sets all covers to 0% |
 
 ![entities](https://github.com/basbruss/adaptive-cover/blob/main/images/entities.png)
 
@@ -397,12 +401,12 @@ The hub device is designed for native voice assistant integration — no custom 
 
 | Voice phrase | Entity triggered | Action |
 |---|---|---|
-| *"Alexa, turn on the blinds"* | switch **Les volets** ON | Adaptive control enabled, manual overrides cleared |
-| *"Alexa, turn off the blinds"* | switch **Les volets** OFF | Adaptive control disabled |
-| *"Alexa, open the blinds"* | cover **Les volets** open | All covers → 100% |
-| *"Alexa, close the blinds"* | cover **Les volets** close | All covers → 0% |
-| *"Alexa, activate blind security"* | switch **Sécurité volets** ON | Security mode enabled — covers close on absence |
-| *"Alexa, deactivate blind security"* | switch **Sécurité volets** OFF | Security mode disabled |
+| *"Alexa, turn on the blinds"* | switch **Toggle control All Blinds** ON | Adaptive control enabled, manual overrides cleared |
+| *"Alexa, turn off the blinds"* | switch **Toggle control All Blinds** OFF | Adaptive control disabled |
+| *"Alexa, open the blinds"* | cover **All Blinds** open | All covers → 100% |
+| *"Alexa, close the blinds"* | cover **All Blinds** close | All covers → 0% |
+| *"Alexa, activate blind security"* | switch **Toggle security All Blinds** ON | Security mode enabled — covers close on absence |
+| *"Alexa, deactivate blind security"* | switch **Toggle security All Blinds** OFF | Security mode disabled |
 
 > Alexa routes commands by verb type: `turn on/off` → switch, `open/close` → cover.  
 > The same entity names work with **Google Assistant** and **Assist**.

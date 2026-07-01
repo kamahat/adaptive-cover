@@ -39,6 +39,8 @@
           "set_azimuth": "Azimut de la ventana",
           "window_height": "Altura de la ventana",
           "distance_shaded_area": "Área sombreada",
+          "effective_minimum": "Posición mínima efectiva",
+          "enable_effective_minimum": "Activar mínimo efectivo",
           "default_percentage": "Posición por defecto",
           "min_position": "Posición mínima",
           "max_position": "Posición máxima",
@@ -61,6 +63,8 @@
           "set_azimuth": "Indicar azimut",
           "window_height": "Indicar la altura de la ventana en metros",
           "distance_shaded_area": "Distancia de la persiana al área sombreada en metros",
+          "effective_minimum": "Posición de la persiana en la que la ventana está completamente cubierta (ej., 30 % para persianas exteriores de lamas)",
+          "enable_effective_minimum": "Activa la correspondencia del rango efectivo para el cálculo de la posición cuando la ventana está completamente cubierta en un estado no cerrado (ej., al 30 %)",
           "default_percentage": "Posición por defecto de la persiana como porcentaje",
           "min_position": "Posición mínima ajustable de la persiana como porcentaje",
           "max_position": "Posición máxima ajustable de la persiana como porcentaje",
@@ -119,6 +123,8 @@
           "window_height": "Altura del toldo",
           "angle": "Ángulo del toldo",
           "distance_shaded_area": "Área sombreada",
+          "effective_minimum": "Posición mínima efectiva",
+          "enable_effective_minimum": "Activar mínimo efectivo",
           "default_percentage": "Posición predeterminada",
           "min_position": "Posición mínima",
           "max_position": "Posición máxima",
@@ -143,6 +149,8 @@
           "length_awning": "Longitud total en metros",
           "angle": "Ángulo del toldo fijado medido perpendicularmente desde la pared hasta el suelo",
           "distance_shaded_area": "Distancia de la portada al Área sombreada en metros",
+          "effective_minimum": "Posición de la persiana en la que la ventana está completamente cubierta (ej., 30 % para persianas exteriores de lamas)",
+          "enable_effective_minimum": "Activa la correspondencia del rango efectivo para el cálculo de la posición cuando la ventana está completamente cubierta en un estado no cerrado (ej., al 30 %)",
           "default_percentage": "Posición por defecto de la persiana como porcentaje",
           "min_position": "Posición mínima de la cubierta ajustable como porcentaje",
           "max_position": "Posición máxima ajustable de la persiana como porcentaje",
@@ -272,6 +280,8 @@
           "set_azimuth": "Azimut de ventana",
           "window_height": "Altura de la ventana",
           "distance_shaded_area": "Área sombreada",
+          "effective_minimum": "Posición mínima efectiva",
+          "enable_effective_minimum": "Activar mínimo efectivo",
           "default_percentage": "Posición predeterminada",
           "min_position": "Posición mínima",
           "max_position": "Posición máxima",
@@ -294,6 +304,8 @@
           "set_azimuth": "Ajustar azimut",
           "window_height": "Especifique la altura de la ventana en metros",
           "distance_shaded_area": "Distancia desde la persiana área sombreada en metros",
+          "effective_minimum": "Posición de la persiana en la que la ventana está completamente cubierta (ej., 30 % para persianas exteriores de lamas)",
+          "enable_effective_minimum": "Activa la correspondencia del rango efectivo para el cálculo de la posición cuando la ventana está completamente cubierta en un estado no cerrado (ej., al 30 %)",
           "default_percentage": "Posición por defecto de la persiana como porcentaje",
           "min_position": "Posición mínima de la cubierta ajustable como porcentaje",
           "max_position": "Posición máxima ajustable de la persiana como porcentaje",
@@ -352,6 +364,8 @@
           "window_height": "Awning Height",
           "angle": "Ángulo del toldo",
           "distance_shaded_area": "Área sombreada",
+          "effective_minimum": "Posición mínima efectiva",
+          "enable_effective_minimum": "Activar mínimo efectivo",
           "default_percentage": "Posición predeterminada",
           "min_position": "Posición mínima",
           "max_position": "Posición máxima",
@@ -376,6 +390,8 @@
           "length_awning": "Longitud total en metros",
           "angle": "Ángulo del toldo fijo medido perpendicularmente desde la pared hasta el suelo",
           "distance_shaded_area": "Distancia de la persiana al área sombreada en metros",
+          "effective_minimum": "Posición de la persiana en la que la ventana está completamente cubierta (ej., 30 % para persianas exteriores de lamas)",
+          "enable_effective_minimum": "Activa la correspondencia del rango efectivo para el cálculo de la posición cuando la ventana está completamente cubierta en un estado no cerrado (ej., al 30 %)",
           "default_percentage": "Posición por defecto de la persiana como porcentaje",
           "min_position": "Posición mínima de la persiana ajustable como porcentaje",
           "max_position": "Posición máxima ajustable de la persiana como porcentaje",
@@ -475,6 +491,40 @@
       "options": {
         "mode1": "dirección única (0% = cerrado / 100% = abierto)",
         "mode2": "bidireccional (0% = cerrado / 50% = abierto / 100% = cerrado)"
+      }
+    }
+  },
+  "entity": {
+    "select": {
+      "adaptive_control_mode": {
+        "name": "Modo de control",
+        "state": {
+          "auto": "Auto",
+          "off": "Apagado",
+          "all_open": "Todas abiertas",
+          "all_closed": "Todas cerradas"
+        }
+      }
+    },
+    "cover": {
+      "all_blinds": {
+        "name": "Todas las persianas"
+      }
+    },
+    "switch": {
+      "all_blinds_control": {
+        "name": "Control todas las persianas"
+      },
+      "all_blinds_security": {
+        "name": "Seguridad todas las persianas"
+      }
+    },
+    "scene": {
+      "all_blinds_open": {
+        "name": "Abrir todas las persianas"
+      },
+      "all_blinds_closed": {
+        "name": "Cerrar todas las persianas"
       }
     }
   }

@@ -238,20 +238,26 @@ class AdaptiveCoverSwitch(
 class AdaptiveControlAllSwitch(SwitchEntity):
     """ON/OFF switch on the "All Blinds" hub device.
 
-    Designed for Alexa voice control:
-      - "Alexa, active les volets"    → turn ON  → adaptive positioning enabled.
-      - "Alexa, désactive les volets" → turn OFF → adaptive positioning disabled.
+    Selecting this switch activates adaptive positioning on the aggregate level.
     """
 
     _attr_has_entity_name = False
-    _attr_name = "Les volets"
     _attr_should_poll = True
     _attr_icon = "mdi:auto-mode"
+
+    _NAME_MAP = {
+        "en": "Toggle control All Blinds",
+        "fr": "Les volets",
+        "nl": "Bediening alle jaloezieën",
+        "es": "Control todas las persianas",
+    }
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Bind to the hub config entry's device."""
         self.hass = hass
         self._config_entry = config_entry
+        lang = (hass.config.language or "en").split("-")[0]
+        self._attr_name = self._NAME_MAP.get(lang, self._NAME_MAP["en"])
         self._attr_unique_id = f"{config_entry.entry_id}_adaptive_control_all"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, config_entry.entry_id)},
@@ -307,14 +313,22 @@ class AdaptiveSecurityAllSwitch(SwitchEntity):
     """
 
     _attr_has_entity_name = False
-    _attr_name = "Sécurité volets"  # Alexa: "active / désactive la sécurité des volets"
     _attr_should_poll = True
     _attr_icon = "mdi:shield-home"
+
+    _NAME_MAP = {
+        "en": "Toggle security All Blinds",
+        "fr": "Sécurité volets",
+        "nl": "Beveiliging alle jaloezieën",
+        "es": "Seguridad todas las persianas",
+    }
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Bind to the hub config entry's device."""
         self.hass = hass
         self._config_entry = config_entry
+        lang = (hass.config.language or "en").split("-")[0]
+        self._attr_name = self._NAME_MAP.get(lang, self._NAME_MAP["en"])
         self._attr_unique_id = f"{config_entry.entry_id}_security_all"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, config_entry.entry_id)},
